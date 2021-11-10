@@ -15,7 +15,7 @@ char keys[COLS][ROWS] = {
   {78, 79, 80, 81, 82, 83},
   {84, 85, 86, 87, 88, 89} // Last Key = C6 (MIDI Number 84)
 }; 
-// more info about keys in Readme With Service Manual's Prints. - Keys can be charged, charging MIDI Numbers.
+// more info about keys in Readme With Service Manual's Prints. - Keys can be charged, changing MIDI Numbers.
 byte rowPins[ROWS] = {22, 24, 26, 28, 30, 32, 34, 36, 38}; //connect to the row pinouts of the kpd - Arduino MEGA
 byte colPins[COLS] = {A0, A1, A2, A3, A4, A5}; //connect to the column pinouts of the kpd
 
