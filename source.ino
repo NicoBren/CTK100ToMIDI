@@ -1,23 +1,23 @@
 #include <MIDI.h>
 #include <Keypad.h>
 
-const byte ROWS = 9; // 9 Linhas
-const byte COLS = 6; // 6 Colunas
- 
+const byte ROWS = 9; // 9 Linhas - KO0~KO8 
+const byte COLS = 6; // 6 Colunas - KI2~KI7
+// more info about ROWS and COLS in Readme With Service Manual's Prints. 
 char keys[COLS][ROWS] = {
+  {36, 37, 38, 39, 40, 41}, // First Key = C2 (MIDI Number 36)
+  {42, 43, 44, 45, 46, 47},
   {48, 49, 50, 51, 52, 53},
   {54, 55, 56, 57, 58, 59},
   {60, 61, 62, 63, 64, 65},
   {66, 67, 68, 69, 70, 71},
   {72, 73, 74, 75, 76, 77},
   {78, 79, 80, 81, 82, 83},
-  {84, 85, 86, 87, 88, 89},
-  {90, 91, 92, 93, 94, 95},
-  {96, 97, 98, 99, 100, 101}
-};
- 
-byte rowPins[ROWS] = {22, 26, 30, 34, 38, 42, 46, 50}; //connect to the row pinouts of the kpd
-byte colPins[COLS] = {A0, A2, A4, A6, A8, A10, A12, A14}; //connect to the column pinouts of the kpd
+  {84, 85, 86, 87, 88, 89} // Last Key = C6 (MIDI Number 84)
+}; 
+// more info about keys in Readme With Service Manual's Prints. - Keys can be charged, charging MIDI Numbers.
+byte rowPins[ROWS] = {22, 24, 26, 28, 30, 32, 34, 36, 38}; //connect to the row pinouts of the kpd - Arduino MEGA
+byte colPins[COLS] = {A0, A1, A2, A3, A4, A5}; //connect to the column pinouts of the kpd
 
 Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
