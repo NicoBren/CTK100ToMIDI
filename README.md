@@ -20,8 +20,8 @@ In MIDI are 36 (C2) to 84 (C6)
 
 ### Special Thanks:
 
-seileremerson - For Original Code. It can be found [Here](https://forum.arduino.cc/t/keyboard-piano-scanner-casio-ctk-485-arduino-mega-2560/646089)
+seileremerson - Original Code. It can be found [Here](https://forum.arduino.cc/t/keyboard-piano-scanner-casio-ctk-485-arduino-mega-2560/646089/2)
 
-DarwinWasWrong (Community Helper in Arduino's Discord) - For Helping with Code. <3
+DarwinWasWrong (Community Helper - [Arduino's Discord](https://discord.gg/jQJFwW7)) - Per helping in code . <3
 
-KennyBelmont, Krupskaya, Neozeed, JuliotheJulio and MatheusAdrian - For always supporting the crazy things I want to do. 
+KennyBelmont, Krupskaya, Neozeed, JuliotheJulio and MatheusAdrian - Per always supporting the crazy things I want to do. 
