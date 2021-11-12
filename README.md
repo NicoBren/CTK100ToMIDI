@@ -18,7 +18,7 @@ In MIDI are 36 (C2) to 84 (C6)
 ## FLAT From Keyboard
 ![FLAT2](/doc/FLAT2CTK100.png)
 
-###Special Thanks:
+### Special Thanks:
 
 seileremerson - For Original Code. It can be found [Here](https://forum.arduino.cc/t/keyboard-piano-scanner-casio-ctk-485-arduino-mega-2560/646089)
 
