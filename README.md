@@ -1,6 +1,6 @@
 # Casio CTK-100 to MIDI
 
-Keyboard Casio CTK-100 To MIDI using a Arduino and [HairLess MIDI Serial](https://github.com/projectgus/hairless-midiserial)
+Keyboard Casio CTK-100 To MIDI using a Arduino and [HairLess MIDI Serial](https://projectgus.github.io/hairless-midiserial/)
 
 A Copy of Service Manual is Availiable [HERE](https://github.com/NicoBrenChan/KeyToMIDI/blob/main/doc/CTK100ServiceManual.pdf)
 
