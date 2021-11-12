@@ -1,5 +1,6 @@
 # Casio CTK-100 to MIDI
-Keyboard Casio CTK-100 To MIDI using a Arduino. 
+
+Keyboard Casio CTK-100 To MIDI using a Arduino and [HairLess MIDI Serial](https://github.com/projectgus/hairless-midiserial)
 
 A Copy of Service Manual is Availiable [HERE](https://github.com/NicoBrenChan/KeyToMIDI/blob/main/doc/CTK100ServiceManual.pdf)
 
@@ -16,3 +17,11 @@ In MIDI are 36 (C2) to 84 (C6)
 
 ## FLAT From Keyboard
 ![FLAT2](/doc/FLAT2CTK100.png)
+
+###Special Thanks:
+
+seileremerson - For Original Code. It can be found [Here](https://forum.arduino.cc/t/keyboard-piano-scanner-casio-ctk-485-arduino-mega-2560/646089)
+
+DarwinWasWrong (Community Helper in Arduino's Discord) - For Helping with Code. <3
+
+KennyBelmont, Krupskaya, Neozeed, JuliotheJulio and MatheusAdrian - For always supporting the crazy things I want to do. 
