@@ -38,7 +38,7 @@ void loop() {
    {
      if ( kpd.key[i].stateChanged )   // Only find keys that have changed state.
      {
-       pressed = kpd.key[i].kchar + 12;
+       pressed = kpd.key[i].kchar + 0;
        switch (kpd.key[i].kstate) {  // Report active key state : IDLE, PRESSED, HOLD, or RELEASED
          case PRESSED:
            sendMIDI(chanel | 0x90, pressed, 100);
