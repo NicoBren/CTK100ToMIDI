@@ -71,11 +71,11 @@ void loop() {
   // Se o estado da oitava mudou, atualize o visor
   if (octaveState != lastOctaveState) {
     lcd.clear();
-    lcd.print("Primeira Tecla: C");
+    lcd.print("Pri. Tecla: C");
     lcd.print(octaveState + 1); // Ajuste +1 porque octaveState começa de 0
     lcd.print("1");
     lcd.setCursor(0, 1);
-    lcd.print("Ultima Tecla: C");
+    lcd.print("Ult. Tecla: C");
     lcd.print(octaveState + 5); // Ajuste +5 para a última oitava
     lastOctaveState = octaveState;
   }
