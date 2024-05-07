@@ -1,5 +1,6 @@
 #include <MIDI.h>
 #include <Keypad.h>
+#include <LiquidCrystal.h>
 
 const byte ROWS = 9; // 9 Rows - KO0~KO8 
 const byte COLS = 6; // 6 Collumns - KI2~KI7
@@ -23,6 +24,7 @@ const int octaveSwitchPin1 = A6;
 const int octaveSwitchPin2 = A7;
 
 Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+LiquidCrystal lcd(22, 23, 24, 25, 26, 27); // RS, E, D4, D5, D6, D7
 
 byte pressed = 32;
 byte chanel = 0; // MIDI channel to use
@@ -34,6 +36,7 @@ int octaveState = 1;
 
 void setup() {
   Serial.begin(115200); // set this the same as Hairless
+  lcd.begin(16, 2); // initialize the LCD with 16 characters and 2 lines
 }
 
 
@@ -63,7 +66,16 @@ void loop() {
   int switch1State = digitalRead(octaveSwitchPin1);
   int switch2State = digitalRead(octaveSwitchPin2);
   octaveState = switch1State * 2 + switch2State;
-} 
+  
+  // Exibe a primeira e a última oitava atual no visor LCD
+  lcd.clear();
+  lcd.print("Primeira Tecla: C");
+  lcd.print(octaveState + 1); // Ajuste +1 porque octaveState começa de 0
+  lcd.print("1");
+  lcd.setCursor(0, 1);
+  lcd.print("Ultima Tecla: C");
+  lcd.print(octaveState + 5); // Ajuste +5 para a última oitava
+}
 
 void sendMIDI(byte type, byte note, byte velocity){
   Serial.write(type);
