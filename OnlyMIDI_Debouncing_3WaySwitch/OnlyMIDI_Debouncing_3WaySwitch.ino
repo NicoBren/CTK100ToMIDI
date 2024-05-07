@@ -33,6 +33,7 @@ unsigned long lastDebounceTime = 0;
 unsigned long debounceDelay = 50;
 
 int octaveState = 1;
+int lastOctaveState = 1;
 
 void setup() {
   Serial.begin(115200); // set this the same as Hairless
@@ -67,14 +68,17 @@ void loop() {
   int switch2State = digitalRead(octaveSwitchPin2);
   octaveState = switch1State * 2 + switch2State;
   
-  // Exibe a primeira e a última oitava atual no visor LCD
-  lcd.clear();
-  lcd.print("Primeira Tecla: C");
-  lcd.print(octaveState + 1); // Ajuste +1 porque octaveState começa de 0
-  lcd.print("1");
-  lcd.setCursor(0, 1);
-  lcd.print("Ultima Tecla: C");
-  lcd.print(octaveState + 5); // Ajuste +5 para a última oitava
+  // Se o estado da oitava mudou, atualize o visor
+  if (octaveState != lastOctaveState) {
+    lcd.clear();
+    lcd.print("Primeira Tecla: C");
+    lcd.print(octaveState + 1); // Ajuste +1 porque octaveState começa de 0
+    lcd.print("1");
+    lcd.setCursor(0, 1);
+    lcd.print("Ultima Tecla: C");
+    lcd.print(octaveState + 5); // Ajuste +5 para a última oitava
+    lastOctaveState = octaveState;
+  }
 }
 
 void sendMIDI(byte type, byte note, byte velocity){
