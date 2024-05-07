@@ -1,114 +1,72 @@
 #include <MIDI.h>
+#include <Keypad.h>
 
-const int ROWS = 9;  // Number of rows in the matrix
-const int COLS = 6;  // Number of columns in the matrix
-const int MIDI_CHANNEL = 1;  // MIDI channel for sending data
+const byte ROWS = 9; // 9 Rows - KO0~KO8 
+const byte COLS = 6; // 6 Collumns - KI2~KI7
 
-// Mapping of keys to MIDI notes
-const byte NOTE_MAP[ROWS][COLS] = {
-  {36, 37, 38, 39, 40, 41},  // Notes of the first row
-  {42, 43, 44, 45, 46, 47},  // Notes of the second row
-  {48, 49, 50, 51, 52, 53},  // Notes of the third row
-  {54, 55, 56, 57, 58, 59},  // Notes of the fourth row
-  {60, 61, 62, 63, 64, 65},  // Notes of the fifth row
-  {66, 67, 68, 69, 70, 71},  // Notes of the sixth row
-  {72, 73, 74, 75, 76, 77},  // Notes of the seventh row
-  {78, 79, 80, 81, 82, 83},  // Notes of the eighth row
-  {84, 00, 00, 00, 00, 00}   // Last row, only the first column is used
-};
+char keys[ROWS][COLS] = {
+  {36, 37, 38, 39, 40, 41},  
+  {42, 43, 44, 45, 46, 47},
+  {48, 49, 50, 51, 52, 53},
+  {54, 55, 56, 57, 58, 59},
+  {60, 61, 62, 63, 64, 65},
+  {66, 67, 68, 69, 70, 71},
+  {72, 73, 74, 75, 76, 77},
+  {78, 79, 80, 81, 82, 83},
+  {84, 00, 00, 00, 00, 00} // First key: C2, Last Key: C6
+}; 
 
-// Pins of the matrix
-const int rowPins[ROWS] = {2, 3, 4, 5, 6, 7, 8, 9, 10};
-const int colPins[COLS] = {11, 12, 13, A0, A1, A2};
+byte rowPins[ROWS] = {22, 24, 26, 28, 30, 32, 34, 36, 38}; //connect to the row pinouts of the kpd - Arduino MEGA
+byte colPins[COLS] = {A0, A1, A2, A3, A4, A5}; //connect to the column pinouts of the kpd
 
-// Pins of the 3-way switch to control the octave
-const int octaveSwitchPin1 = A3;
-const int octaveSwitchPin2 = A4;
+const int octaveSwitchPin1 = A6;
+const int octaveSwitchPin2 = A7;
 
-// Variable to store the state of the octave (0, 1, or 2)
-int octaveState = 1; // By default, normal configuration (octave 1)
+Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
-// Array to store the current state of the keys
-bool keyState[ROWS][COLS];
-unsigned long lastDebounceTime[ROWS][COLS] = {0};
-unsigned long debounceDelay = 20;
+byte pressed = 32;
+byte chanel = 0; // MIDI channel to use
 
-MIDI_CREATE_DEFAULT_INSTANCE();  // Creation of the MIDI object
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 50;
+
+int octaveState = 1;
 
 void setup() {
-  MIDI.begin(MIDI_CHANNEL);  // Initialization of the MIDI object
-
-  // Pin configuration
-  for (int i = 0; i < ROWS; i++) {
-    pinMode(rowPins[i], INPUT_PULLUP);
-  }
-  for (int i = 0; i < COLS; i++) {
-    pinMode(colPins[i], OUTPUT);
-    digitalWrite(colPins[i], HIGH);
-  }
-  pinMode(octaveSwitchPin1, INPUT_PULLUP);
-  pinMode(octaveSwitchPin2, INPUT_PULLUP);
+  Serial.begin(115200); // set this the same as Hairless
 }
+
 
 void loop() {
-  // Read the current state of the keys
-  readKeys();
-  
-  // Read the current state of the 3-way switch
-  readOctaveSwitch();
-
-  // Send MIDI events for pressed keys
-  sendMIDI();
-}
-
-void readKeys() {
-  for (int col = 0; col < COLS; col++) {
-    // Activate the column
-    digitalWrite(colPins[col], LOW);
-
-    // Check the rows to see if any key is pressed
-    for (int row = 0; row < ROWS; row++) {
-      if (digitalRead(rowPins[row]) == LOW) {
-        if ((millis() - lastDebounceTime[row][col]) > debounceDelay) {
-          keyState[row][col] = true;
-          lastDebounceTime[row][col] = millis();
+  if (kpd.getKeys())
+  {
+    for (int i = 0; i < LIST_MAX; i++) 
+    {
+      if ( kpd.key[i].stateChanged )  
+      {
+        if ((millis() - lastDebounceTime) > debounceDelay) {
+          pressed = kpd.key[i].kchar + 0;
+          switch (kpd.key[i].kstate) { 
+            case PRESSED:
+              sendMIDI(chanel | 0x90, pressed, 100);
+              break;
+            case RELEASED:
+              sendMIDI(chanel | 0x80, pressed, 64);
+              break;
+          }
+          lastDebounceTime = millis();  
         }
-      } else {
-        keyState[row][col] = false;
       }
     }
-
-    // Deactivate the column
-    digitalWrite(colPins[col], HIGH);
   }
-}
-
-void readOctaveSwitch() {
-  // Read the state of the 3-way switch
+  
   int switch1State = digitalRead(octaveSwitchPin1);
   int switch2State = digitalRead(octaveSwitchPin2);
-
-  // Calculate the octave state
   octaveState = switch1State * 2 + switch2State;
-}
+} 
 
-void sendMIDI() {
-  for (int row = 0; row < ROWS; row++) {
-    for (int col = 0; col < COLS; col++) {
-      // Check if the key is pressed and valid
-      if (keyState[row][col] && NOTE_MAP[row][col] != 0) {
-        // Adjust the MIDI note based on the octave state
-        byte adjustedNote = NOTE_MAP[row][col] + (octaveState - 1) * 12;
-        
-        // Send a pressed MIDI note
-        MIDI.sendNoteOn(adjustedNote, 127, MIDI_CHANNEL);
-      } else {
-        // Adjust the MIDI note based on the octave state
-        byte adjustedNote = NOTE_MAP[row][col] + (octaveState - 1) * 12;
-        
-        // Send a release message for the released MIDI note
-        MIDI.sendNoteOff(adjustedNote, 0, MIDI_CHANNEL);
-      }
-    }
-  }
+void sendMIDI(byte type, byte note, byte velocity){
+  Serial.write(type);
+  Serial.write(note & 0x7F);
+  Serial.write(velocity);
 }
